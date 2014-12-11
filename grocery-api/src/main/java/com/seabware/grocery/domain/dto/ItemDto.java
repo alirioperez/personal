@@ -11,6 +11,8 @@ public class ItemDto extends AbstractDto
 
 	private String name;
 
+    private String unitOfMeasure;
+
 	//--------------------------------------------------------------------------------------------------------------------------------
 	public String getName()
 	{
@@ -22,4 +24,15 @@ public class ItemDto extends AbstractDto
 	{
 		this.name = name;
 	}
+
+    //--------------------------------------------------------------------------------------------------------------------------------
+    public String getUnitOfMeasure()
+    {
+        return unitOfMeasure;
+    }
+
+    //--------------------------------------------------------------------------------------------------------------------------------
+    public void setUnitOfMeasure(String unitOfMeasure) {
+        this.unitOfMeasure = unitOfMeasure;
+    }
 }

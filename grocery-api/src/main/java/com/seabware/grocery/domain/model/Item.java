@@ -1,6 +1,7 @@
 package com.seabware.grocery.domain.model;
 
 import com.seabware.framework.domain.model.AbstractEntity;
+import com.seabware.grocery.domain.model.enums.UnitOfMeasureEnum;
 
 import javax.persistence.*;
 
@@ -14,8 +15,8 @@ public class Item extends AbstractEntity
 
 	private String name;
 
-	@Version
-	private Long version;
+    @Enumerated(EnumType.STRING)
+    private UnitOfMeasureEnum unitOfMeasure;
 
 //	@OneToMany
 //	private List<Address> addresses;
@@ -52,15 +53,13 @@ public class Item extends AbstractEntity
 		this.name = name;
 	}
 
-	public Long getVersion()
-	{
-		return version;
-	}
+    public UnitOfMeasureEnum getUnitOfMeasure()
+    {
+        return unitOfMeasure;
+    }
 
-	public void setVersion(Long version)
-	{
-		this.version = version;
-	}
-
-
+    public void setUnitOfMeasure(UnitOfMeasureEnum unitOfMeasure)
+    {
+        this.unitOfMeasure = unitOfMeasure;
+    }
 }
