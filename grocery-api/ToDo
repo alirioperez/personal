@@ -1,0 +1,6 @@
+// TODO: create interfaces for services and facades
+// TODO: apply spring security
+
+// TODO: use AbstractWebResource and exceptions for rest
+// TODO: try to split backend services/daos into another maven project and have web app apart.
+// TODO: use the spring profile approach
