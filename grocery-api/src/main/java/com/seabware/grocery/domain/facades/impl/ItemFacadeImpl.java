@@ -16,14 +16,14 @@ import java.util.List;
 public class ItemFacadeImpl implements ItemFacade
 {
     @Autowired
-    protected ItemService pacienteService;
+    protected ItemService itemService;
 
     @Autowired
     protected MapperFacade mapper;
 
     public ItemDto findOne(Long id)
     {
-        Item entity = pacienteService.findOne(id);
+        Item entity = itemService.findOne(id);
 
         ItemDto dto = mapper.map(entity, ItemDto.class);
 
@@ -32,7 +32,7 @@ public class ItemFacadeImpl implements ItemFacade
 
     public Iterable<ItemDto> findAll()
     {
-        Iterable<Item> entities = pacienteService.findAll();
+        Iterable<Item> entities = itemService.findAll();
 
         List<ItemDto> dtos = new ArrayList<>();
 
@@ -43,5 +43,26 @@ public class ItemFacadeImpl implements ItemFacade
         }
 
         return dtos;
+    }
+
+    @Override
+    public ItemDto create(ItemDto itemDto)
+    {
+        Item itemToBeSaved = mapper.map(itemDto, Item.class);
+        Item itemResult = itemService.save(itemToBeSaved);
+        ItemDto itemDtoToReturn = mapper.map(itemResult, ItemDto.class);
+        return itemDtoToReturn;
+    }
+
+    @Override
+    public ItemDto save(ItemDto item)
+    {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id)
+    {
+
     }
 }
