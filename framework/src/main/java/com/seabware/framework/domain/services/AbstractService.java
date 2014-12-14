@@ -15,60 +15,16 @@ public abstract class AbstractService<RT extends PagingAndSortingRepository<ET, 
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public RT getRepository()
-	{
-		return this.repository;
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public void setRepository(RT repository)
-	{
-		this.repository = repository;
-	}
-
-
-	// --------------------------------------------------------------------------------------------------------------------------------
 	public <S extends ET> S save(S entity)
 	{
 		return getRepository().save(entity);
 	}
-
-//	// --------------------------------------------------------------------------------------------------------------------------------
-//	public DTOT findOne(ID primaryKey)
-//	{
-//		ET entity = _findOne(primaryKey);
-//		DTOT dto = createDto();
-//
-//		convert(entity, dto);
-//
-//		return dto;
-//	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public ET findOne(ID primaryKey)
 	{
 		return getRepository().findOne(primaryKey);
 	}
-
-//	// --------------------------------------------------------------------------------------------------------------------------------
-//	public Iterable<DTOT> findAll()
-//	{
-//		Iterable<ET> entities = _findAll();
-//
-//		List<DTOT> dtos = new ArrayList<>();
-//
-//		for (ET entity : entities)
-//		{
-//
-//			DTOT dto = createDto();
-//
-//			convert(entity, dto);
-//
-//			dtos.add(dto);
-//		}
-//
-//		return dtos;
-//	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
 	public Iterable<ET> findAll()
@@ -93,4 +49,17 @@ public abstract class AbstractService<RT extends PagingAndSortingRepository<ET, 
 	{
 		return getRepository().exists(primaryKey);
 	}
+
+    // --------------------------------------------------------------------------------------------------------------------------------
+    public RT getRepository()
+    {
+        return this.repository;
+    }
+
+    // --------------------------------------------------------------------------------------------------------------------------------
+    public void setRepository(RT repository)
+    {
+        this.repository = repository;
+    }
+
 }

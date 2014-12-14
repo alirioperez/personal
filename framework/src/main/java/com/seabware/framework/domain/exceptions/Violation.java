@@ -1,5 +1,7 @@
 package com.seabware.framework.domain.exceptions;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
 import javax.validation.ConstraintViolation;
@@ -13,6 +15,7 @@ import javax.xml.bind.annotation.XmlTransient;
 // --------------------------------------------------------------------------------------------------------------------------------
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Violation implements Serializable
 {
 	private static final long serialVersionUID = 1607527855319543525L;
@@ -32,19 +35,12 @@ public class Violation implements Serializable
 	private String messageKey;
 
 	@XmlElement
-	private Long primaryKey;
-
-	@XmlElement
-	private int version;
+	private Serializable id;
 
 	@XmlElement
 	private String message;
 
-	@XmlElement
-	private Object[] culprits;
-
 	@XmlTransient
-//	@JsonIgnore
 	/**arguments for resolving messageKey*/
 	private Object[] arguments;
 
@@ -53,9 +49,21 @@ public class Violation implements Serializable
 	{
 	}
 
-	public Violation(String entity)
+    public Violation(Serializable id)
+    {
+        this();
+        this.setId(id);
+    }
+
+    public Violation(String entity)
+    {
+        this();
+        this.setEntity(entity);
+    }
+
+    public Violation(Serializable id, String entity)
 	{
-		this();
+		this(id);
 		this.setEntity(entity);
 	}
 
@@ -126,18 +134,6 @@ public class Violation implements Serializable
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public int getVersion()
-	{
-		return version;
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public void setVersion(int version)
-	{
-		this.version = version;
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------
 	public String getMessage()
 	{
 		return message;
@@ -162,15 +158,15 @@ public class Violation implements Serializable
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public Long getPrimaryKey()
+	public Serializable getID()
 	{
-		return primaryKey;
+		return id;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
-	public void setPrimaryKey(Long primaryKey)
+	public void setId(Serializable id)
 	{
-		this.primaryKey = primaryKey;
+		this.id = id;
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------
@@ -185,15 +181,4 @@ public class Violation implements Serializable
 		this.arguments = arguments;
 	}
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public Object[] getCulprits()
-	{
-		return culprits;
-	}
-
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public void setCulprits(Object[] culprits)
-	{
-		this.culprits = culprits;
-	}
 }

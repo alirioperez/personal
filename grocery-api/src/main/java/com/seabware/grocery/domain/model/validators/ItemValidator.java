@@ -24,7 +24,7 @@ public class ItemValidator implements Validator
 	public void validate(Object target, Errors errors)
 	{
 		Item p = (Item) target;
-		LOG.debug("validating Paciente " + p);
+		LOG.debug("validating Item " + p);
 		ValidationUtils.rejectIfEmpty(errors, "name", "field.name.required", "Field 'name' cannot be blank.");
 	}
 

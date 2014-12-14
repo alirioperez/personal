@@ -5,11 +5,9 @@ import com.seabware.framework.domain.exceptions.BaseException;
 import com.seabware.framework.domain.exceptions.DataNotFoundException;
 import com.seabware.framework.domain.exceptions.Violation;
 import com.seabware.framework.domain.exceptions.ViolationList;
-import ma.glasnost.orika.MapperFacade;
 import org.hibernate.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,64 +24,63 @@ import java.util.Arrays;
 import java.util.List;
 
 // --------------------------------------------------------------------------------------------------------------------------------
-
 public abstract class AbstractWebResource
 {
-	private static Logger log = LoggerFactory.getLogger(AbstractWebResource.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractWebResource.class);
 
-	protected static final String REQUESTBODY_MALFORMED_EXCEPTION = "requestBodyMalFormedException";
+    protected static final String REQUESTBODY_MALFORMED_EXCEPTION = "requestBodyMalFormedException";
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public AbstractWebResource()
-	{
-	}
+    // --------------------------------------------------------------------------------------------------------------------------------
+    public AbstractWebResource()
+    {
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	protected ViolationList generateSingleViolation(Exception exception)
-	{
-		Violation violation = new Violation();
+    // --------------------------------------------------------------------------------------------------------------------------------
+    protected ViolationList generateSingleViolation(Exception exception)
+    {
+        Violation violation = new Violation();
 
-		if (!StringUtils.isEmpty(exception.getMessage()))
-			violation.setMessageKey(exception.getMessage());
-		else
-			violation.setMessageKey(exception.getClass().getSimpleName());
+        if (!StringUtils.isEmpty(exception.getMessage()))
+            violation.setMessageKey(exception.getMessage());
+        else
+            violation.setMessageKey(exception.getClass().getSimpleName());
 
-		violation.setMessage(violation.getMessageKey());
-		//violation.setMessage(resourceBundleService.getMessage(violation.getMessageKey(), violation.getMessageKey()));
+        violation.setMessage(violation.getMessageKey());
+        //violation.setMessage(resourceBundleService.getMessage(violation.getMessageKey(), violation.getMessageKey()));
 
-		return new ViolationList(Arrays.asList(new Violation[]{violation}));
-	}
+        return new ViolationList(Arrays.asList(new Violation[]{violation}));
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	protected ViolationList generateViolationList(BaseException exception)
-	{
-		List<Violation> violations = exception.getViolations();
+    // --------------------------------------------------------------------------------------------------------------------------------
+    protected ViolationList generateViolationList(BaseException exception)
+    {
+        List<Violation> violations = exception.getViolations();
 
-		if (exception.getViolations().isEmpty())
-			return generateSingleViolation(exception);
+        if (exception.getViolations().isEmpty())
+            return generateSingleViolation(exception);
 
-		for (Violation violation : violations)
-		{
-			if (StringUtils.isEmpty(violation.getMessage()))
-			{
-				//violation.setMessage(resourceBundleService.getMessage(violation.getMessageKey(), violation.getMessageKey(), violation.getArguments()));
-				violation.setMessage(violation.getMessageKey());
-			}
+        for (Violation violation : violations)
+        {
+            if (StringUtils.isEmpty(violation.getMessage()))
+            {
+                //violation.setMessage(resourceBundleService.getMessage(violation.getMessageKey(), violation.getMessageKey(), violation.getArguments()));
+                violation.setMessage(violation.getMessageKey());
+            }
 
-		}
-		return new ViolationList(violations);
-	}
+        }
+        return new ViolationList(violations);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler()
-	public void defaultExceptionHandler(Exception exception)
-	{
-		log.error("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.INTERNAL_SERVER_ERROR", exception);
-	}
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler()
+    public void defaultExceptionHandler(Exception exception)
+    {
+        log.error("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.INTERNAL_SERVER_ERROR", exception);
+    }
 
 
-	//	// ----------------------------------------------------------------------------------------
+    //	// ----------------------------------------------------------------------------------------
 //	@ResponseStatus(HttpStatus.MOVED_PERMANENTLY)
 //	@ExceptionHandler(NewVersionAvailableException.class)
 //	@ResponseBody
@@ -161,36 +158,36 @@ public abstract class AbstractWebResource
 //		return generateViolationList(exception);
 //	}
 
-	// --------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * Encompasses both {JsonMappingException} and {JsonParseException} but {JsonParseException} is hidden by {@link org.springframework.http.converter.HttpMessageNotReadableException}
-	 */
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(JsonProcessingException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ViolationList jsonProcessingExceptionHandler(JsonProcessingException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
+    /**
+     * Encompasses both {JsonMappingException} and {JsonParseException} but {JsonParseException} is hidden by {@link org.springframework.http.converter.HttpMessageNotReadableException}
+     */
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(JsonProcessingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ViolationList jsonProcessingExceptionHandler(JsonProcessingException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
 
-		ViolationList generateSingleViolation = generateSingleViolation(new BaseException(REQUESTBODY_MALFORMED_EXCEPTION));
+        ViolationList generateSingleViolation = generateSingleViolation(new BaseException(REQUESTBODY_MALFORMED_EXCEPTION));
 
-		return generateSingleViolation;
-	}
+        return generateSingleViolation;
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(HttpMessageNotReadableException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ViolationList httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ViolationList httpMessageNotReadableExceptionHandler(HttpMessageNotReadableException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
 
-		ViolationList generateSingleViolation = generateSingleViolation(new BaseException(REQUESTBODY_MALFORMED_EXCEPTION));
+        ViolationList generateSingleViolation = generateSingleViolation(new BaseException(REQUESTBODY_MALFORMED_EXCEPTION));
 
-		return generateSingleViolation;
-	}
+        return generateSingleViolation;
+    }
 
 //	// --------------------------------------------------------------------------------------------------------------------------------
 //	@ResponseStatus(HttpStatus.FORBIDDEN)
@@ -202,74 +199,74 @@ public abstract class AbstractWebResource
 //		return generateViolationList(exception);
 //	}
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(AccessDeniedException.class)
-	@ResponseStatus(HttpStatus.FORBIDDEN)
-	@ResponseBody
-	public ViolationList accessDeniedExceptionHandler(AccessDeniedException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.FORBIDDEN", exception);
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public ViolationList accessDeniedExceptionHandler(AccessDeniedException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.FORBIDDEN", exception);
 
-		return generateSingleViolation(exception);
-	}
+        return generateSingleViolation(exception);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
+    // --------------------------------------------------------------------------------------------------------------------------------
 
-	/**
-	 * Encountered cases: - a DELETE operation is requested but no key is supplied
-	 */
-	// ----------------------------------------------------------------------------------------
-	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ViolationList httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
+    /**
+     * Encountered cases: - a DELETE operation is requested but no key is supplied
+     */
+    // ----------------------------------------------------------------------------------------
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ViolationList httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
 
-		return generateSingleViolation(exception);
-	}
+        return generateSingleViolation(exception);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(ObjectNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ViolationList objectNotFoundExceptionHandler(ObjectNotFoundException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.NOT_FOUND", exception);
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(ObjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ViolationList objectNotFoundExceptionHandler(ObjectNotFoundException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.NOT_FOUND", exception);
 
-		ViolationList generateSingleViolation = generateSingleViolation(exception);
-		generateSingleViolation.getViolations().get(0).setEntity(exception.getEntityName());
+        ViolationList generateSingleViolation = generateSingleViolation(exception);
+        generateSingleViolation.getViolations().get(0).setEntity(exception.getEntityName());
 
-		return generateSingleViolation;
+        return generateSingleViolation;
 
-	}
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(DataNotFoundException.class)
-	@ResponseStatus(HttpStatus.NOT_FOUND)
-	@ResponseBody
-	public ViolationList dataNotFoundExceptionHandler(DataNotFoundException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.NOT_FOUND", exception);
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(DataNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ViolationList dataNotFoundExceptionHandler(DataNotFoundException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.NOT_FOUND", exception);
 
-		return generateViolationList(exception);
-	}
+        return generateViolationList(exception);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	@ExceptionHandler(ConstraintViolationException.class)
-	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ResponseBody
-	public ViolationList javaxConstraintViolationExceptionHandler(ConstraintViolationException exception)
-	{
-		log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
+    // --------------------------------------------------------------------------------------------------------------------------------
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ViolationList javaxConstraintViolationExceptionHandler(ConstraintViolationException exception)
+    {
+        log.debug("Unexpected exception: " + exception.getClass().getName() + " reported as HttpStatus.BAD_REQUEST", exception);
 
-		List<Violation> violations = new ArrayList<Violation>();
+        List<Violation> violations = new ArrayList<Violation>();
 
-		for (ConstraintViolation<?> constraintViolation : exception.getConstraintViolations())
-			violations.add(new Violation(constraintViolation));
+        for (ConstraintViolation<?> constraintViolation : exception.getConstraintViolations())
+            violations.add(new Violation(constraintViolation));
 
-		return new ViolationList(violations);
-	}
+        return new ViolationList(violations);
+    }
 
 //	// --------------------------------------------------------------------------------------------------------------------------------
 //	/**
