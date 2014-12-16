@@ -85,7 +85,9 @@ public class BaseException extends RuntimeException
 	{
 		super(message);
 		for (javax.validation.ConstraintViolation<?> violation : pViolations)
-			violations.add(new Violation(violation));
+        {
+            violations.add(new Violation(violation));
+        }
 	}
 
 	// --------------------------------------------------------------------------------------------------------------------------------

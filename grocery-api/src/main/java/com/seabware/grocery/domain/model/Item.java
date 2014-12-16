@@ -4,13 +4,12 @@ import com.seabware.framework.domain.model.AbstractEntity;
 import com.seabware.grocery.domain.model.enums.UnitOfMeasureEnum;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Item extends AbstractEntity
 {
 	private String name;
-
-    @Enumerated(EnumType.STRING)
     private UnitOfMeasureEnum unitOfMeasure;
 
 //	@OneToMany
@@ -18,7 +17,8 @@ public class Item extends AbstractEntity
 //	@OneToMany
 //	private Map<String, Profile> profiles;
 
-	public String getName()
+	@NotNull
+    public String getName()
 	{
 		return name;
 	}
@@ -28,6 +28,7 @@ public class Item extends AbstractEntity
 		this.name = name;
 	}
 
+    @Enumerated(EnumType.STRING)
     public UnitOfMeasureEnum getUnitOfMeasure()
     {
         return unitOfMeasure;

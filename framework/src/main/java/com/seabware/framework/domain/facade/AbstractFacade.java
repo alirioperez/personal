@@ -2,14 +2,16 @@ package com.seabware.framework.domain.facade;
 
 import com.seabware.framework.domain.dto.AbstractDto;
 import com.seabware.framework.domain.exceptions.DataNotFoundException;
+import com.seabware.framework.domain.exceptions.EntityValidationException;
 import com.seabware.framework.domain.exceptions.Violation;
 import com.seabware.framework.domain.model.AbstractEntity;
 import com.seabware.framework.domain.services.AbstractService;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.TransactionSystemException;
 
 import javax.transaction.Transactional;
-import java.io.Serializable;
+import javax.validation.ConstraintViolationException;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +20,10 @@ import java.util.List;
 
 /**
  * Base class for facades. Provides basic CRUD operations.
- * @param <ST> the underlying Service type.
+ *
+ * @param <ST>   the underlying Service type.
  * @param <DTOT> the underlying DTO type.
- * @param <ET> the underlying Entity type
+ * @param <ET>   the underlying Entity type
  */
 // ---------------------------------------------------------------------------------------------------------------------------
 public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto, ET extends AbstractEntity>
@@ -68,10 +71,27 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
     public DTOT create(DTOT dto)
     {
         ET entityToBeSaved = mapper.map(dto, entityTypeClass);
-        ET entityResult = (ET) service.save(entityToBeSaved);
-        DTOT dtoToReturn = mapper.map(entityResult, dtoTypeClass);
+        ET entityResult = null;
 
-        return dtoToReturn;
+        try
+        {
+            entityResult = (ET) service.save(entityToBeSaved);
+
+            DTOT dtoToReturn = mapper.map(entityResult, dtoTypeClass);
+
+            return dtoToReturn;
+        }
+        catch (TransactionSystemException exception)
+        {
+            EntityValidationException translatedException = translateTransactionSystemException(exception);
+
+            if (translatedException !=null)
+            {
+                throw translatedException;
+            }
+
+            throw exception;
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------------------------
@@ -86,11 +106,27 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
             mapper.map(dto, entity);
             entity.setId(tempId);
 
-            ET entityResult = (ET) service.save(entity);
+            ET entityResult = null;
 
-            DTOT dtoToReturn = mapper.map(entityResult, dtoTypeClass);
+            try
+            {
+                entityResult = (ET) service.save(entity);
 
-            return dtoToReturn;
+                DTOT dtoToReturn = mapper.map(entityResult, dtoTypeClass);
+
+                return dtoToReturn;
+            }
+            catch (TransactionSystemException exception)
+            {
+                EntityValidationException translatedException = translateTransactionSystemException(exception);
+
+                if (translatedException !=null)
+                {
+                    throw translatedException;
+                }
+
+                throw exception;
+            }
         }
         else
         {
@@ -106,10 +142,26 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         if (entity != null)
         {
             service.delete(entity);
-        }
-        else
+        } else
         {
             throw new DataNotFoundException("Entity not found", new Violation(id, entityTypeClass.getSimpleName()));
         }
     }
+
+    // ---------------------------------------------------------------------------------------------------------------------------
+    private EntityValidationException translateTransactionSystemException(TransactionSystemException exception)
+    {
+        if (exception.getCause() != null)
+        {
+            if (exception.getCause().getCause() != null && exception.getCause().getCause() instanceof ConstraintViolationException)
+            {
+                ConstraintViolationException innerException = (ConstraintViolationException) exception.getCause().getCause();
+
+                return new EntityValidationException("Entity not found", innerException.getConstraintViolations());
+            }
+        }
+
+       return null;
+    }
+
 }

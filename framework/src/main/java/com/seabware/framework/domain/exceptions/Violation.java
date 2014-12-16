@@ -84,7 +84,7 @@ public class Violation implements Serializable
 	{
 		this();
 
-		entity = source.getRootBeanClass().getName();
+		entity = source.getRootBeanClass().getSimpleName();
 		property = source.getPropertyPath() == null ? null : source.getPropertyPath().toString();
 		messageKey = source.getMessageTemplate();
 		message = source.getMessage();

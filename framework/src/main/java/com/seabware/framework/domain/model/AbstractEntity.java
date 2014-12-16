@@ -6,26 +6,25 @@ import javax.persistence.*;
 @MappedSuperclass
 public abstract class AbstractEntity
 {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-
-    @Version
     protected Long version;
 
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     public Long getId()
     {
         return id;
     }
 
-    public void setId(Long id)
-    {
-        this.id = id;
-    }
-
+    @Version
     public Long getVersion()
     {
         return version;
+    }
+
+    public void setId(Long id)
+    {
+        this.id = id;
     }
 
     public void setVersion(Long version)
