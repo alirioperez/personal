@@ -16,8 +16,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 
-// ---------------------------------------------------------------------------------------------------------------------------
-
 /**
  * Base class for facades. Provides basic CRUD operations.
  *
@@ -25,7 +23,6 @@ import java.util.List;
  * @param <DTOT> the underlying DTO type.
  * @param <ET>   the underlying Entity type
  */
-// ---------------------------------------------------------------------------------------------------------------------------
 public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto, ET extends AbstractEntity>
 {
     @Autowired
@@ -36,7 +33,12 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
     private Class<DTOT> dtoTypeClass = (Class<DTOT>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1];
     private Class<ET> entityTypeClass = (Class<ET>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2];
 
-    // ---------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Finds only one entity given its id or primary key
+     *
+     * @param id primary key of the entity to be found
+     * @return a DTO representation of the entity found
+     */
     public DTOT findOne(Long id)
     {
         ET entity = (ET) service.findOne(id);
@@ -51,7 +53,11 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         return dto;
     }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Finds all entities
+     *
+     * @return a Iterable of DTO representations for the underlying entity
+     */
     public Iterable<DTOT> findAll()
     {
         Iterable<ET> entities = service.findAll();
@@ -67,7 +73,12 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         return dtos;
     }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Creates an entity
+     *
+     * @param dto the DTO representation of the new entity
+     * @return the resulting DTO representation of the new entity
+     */
     public DTOT create(DTOT dto)
     {
         ET entityToBeSaved = mapper.map(dto, entityTypeClass);
@@ -85,7 +96,7 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         {
             EntityValidationException translatedException = translateTransactionSystemException(exception);
 
-            if (translatedException !=null)
+            if (translatedException != null)
             {
                 throw translatedException;
             }
@@ -94,7 +105,13 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         }
     }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Updates an entity given its primary key and the DTO containing the changes
+     *
+     * @param id  the primary key of the entity to be updated
+     * @param dto the DTO representation containing the changes
+     * @return the DTO representation of the updated entity
+     */
     @Transactional
     public DTOT update(Long id, DTOT dto)
     {
@@ -120,7 +137,7 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
             {
                 EntityValidationException translatedException = translateTransactionSystemException(exception);
 
-                if (translatedException !=null)
+                if (translatedException != null)
                 {
                     throw translatedException;
                 }
@@ -134,7 +151,11 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         }
     }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Deletes an entity given its primary key
+     *
+     * @param id the primary key of the entity to be deleted
+     */
     public void delete(Long id)
     {
         ET entity = (ET) service.findOne(id);
@@ -142,13 +163,13 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
         if (entity != null)
         {
             service.delete(entity);
-        } else
+        }
+        else
         {
             throw new DataNotFoundException("Entity not found", new Violation(id, entityTypeClass.getSimpleName()));
         }
     }
 
-    // ---------------------------------------------------------------------------------------------------------------------------
     private EntityValidationException translateTransactionSystemException(TransactionSystemException exception)
     {
         if (exception.getCause() != null)
@@ -161,7 +182,6 @@ public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto
             }
         }
 
-       return null;
+        return null;
     }
-
 }

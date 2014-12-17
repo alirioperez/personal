@@ -3,6 +3,9 @@ package com.seabware.framework.domain.model;
 
 import javax.persistence.*;
 
+/**
+ * Base class for all entities
+ */
 @MappedSuperclass
 public abstract class AbstractEntity
 {

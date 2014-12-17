@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ItemService extends AbstractService<ItemRepository, Item, Long>
+public class ItemService extends AbstractService<ItemRepository, Item>
 {
 	@Autowired
 	public ItemService(ItemRepository repository)

@@ -7,9 +7,11 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 
 
+/**
+ * Base Spring context loader listener to be used in apps.
+ */
 public class SeabwareContextLoaderListener extends org.springframework.web.context.ContextLoaderListener
 {
-	// --------------------------------------------------------------------------------------------------------------------------------
 	public void contextDestroyed(javax.servlet.ServletContextEvent event)
 	{
 		super.contextDestroyed(event);
@@ -22,11 +24,9 @@ public class SeabwareContextLoaderListener extends org.springframework.web.conte
 			try
 			{
 				DriverManager.deregisterDriver(driver);
-				//LOG.log(Level.INFO, String.format("deregistering jdbc driver: %s", driver));
 			}
 			catch (SQLException e)
 			{
-				//LOG.log(Level.SEVERE, String.format("Error deregistering driver %s", driver), e);
 			}
 
 		}

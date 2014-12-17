@@ -4,62 +4,101 @@ package com.seabware.framework.domain.services;
 import com.seabware.framework.domain.model.AbstractEntity;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
-public abstract class AbstractService<RT extends PagingAndSortingRepository<ET, ID>, ET extends AbstractEntity, ID extends java.io.Serializable>
+/**
+ * Base class for all atomic services providing basic CRUD operations
+ *
+ * @param <RT> the underlying repository type
+ * @param <ET> the underlying Entity type
+ */
+public abstract class AbstractService<RT extends PagingAndSortingRepository<ET, Long>, ET extends AbstractEntity>
 {
-	private RT repository;
+    private RT repository;
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public AbstractService(RT repository)
-	{
-		this.repository = repository;
-	}
+    public AbstractService(RT repository)
+    {
+        this.repository = repository;
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public <S extends ET> S save(S entity)
-	{
-		return getRepository().save(entity);
-	}
+    /**
+     * Saves an entity
+     *
+     * @param entity the entity to be saved
+     * @return the saved entity
+     */
+    public ET save(ET entity)
+    {
+        return getRepository().save(entity);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public ET findOne(ID primaryKey)
-	{
-		return getRepository().findOne(primaryKey);
-	}
+    /**
+     * Find one entity given its primary key
+     *
+     * @param primaryKey the primary key of the entity
+     * @return the entity associated to the given primary key
+     */
+    public ET findOne(Long primaryKey)
+    {
+        return getRepository().findOne(primaryKey);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public Iterable<ET> findAll()
-	{
-		return getRepository().findAll();
-	}
+    /**
+     * Finds all entities
+     *
+     * @return a iterable structure containing all entities
+     */
+    public Iterable<ET> findAll()
+    {
+        return getRepository().findAll();
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public Long count()
-	{
-		return getRepository().count();
-	}
+    /**
+     * Counts all entities in the repo
+     *
+     * @return the count of all entities
+     */
+    public Long count()
+    {
+        return getRepository().count();
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public void delete(ET entity)
-	{
-		getRepository().delete(entity);
-	}
+    /**
+     * Deletes an entity provided
+     *
+     * @param entity the entity to be deleted
+     */
+    public void delete(ET entity)
+    {
+        getRepository().delete(entity);
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------------------
-	public boolean exists(ID primaryKey)
-	{
-		return getRepository().exists(primaryKey);
-	}
+    /**
+     * Checks whether an entity exists or not given its primary key
+     *
+     * @param primaryKey the primary key of the entity to check
+     * @return a boolean indicating whether the entity exists or not
+     */
+    public boolean exists(Long primaryKey)
+    {
+        return getRepository().exists(primaryKey);
+    }
 
-    // --------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Accesor for the repo
+     *
+     * @return the repo used in this service
+     */
     public RT getRepository()
     {
         return this.repository;
     }
 
-    // --------------------------------------------------------------------------------------------------------------------------------
+    /**
+     * Setter for the repo
+     *
+     * @param repository the repo to be set
+     */
     public void setRepository(RT repository)
     {
         this.repository = repository;
     }
-
 }
