@@ -1,11 +1,11 @@
 package com.seabware.framework.domain.facade;
 
-import com.seabware.framework.domain.dto.AbstractDto;
+import com.seabware.framework.domain.dto.AbstractBaseDto;
 import com.seabware.framework.domain.exceptions.DataNotFoundException;
 import com.seabware.framework.domain.exceptions.EntityValidationException;
 import com.seabware.framework.domain.exceptions.Violation;
-import com.seabware.framework.domain.model.AbstractEntity;
-import com.seabware.framework.domain.services.AbstractService;
+import com.seabware.framework.domain.model.AbstractBaseEntity;
+import com.seabware.framework.domain.services.AbstractBaseService;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionSystemException;
@@ -23,7 +23,7 @@ import java.util.List;
  * @param <DTOT> the underlying DTO type.
  * @param <ET>   the underlying Entity type
  */
-public class AbstractFacade<ST extends AbstractService, DTOT extends AbstractDto, ET extends AbstractEntity>
+public class AbstractBaseFacade<ST extends AbstractBaseService, DTOT extends AbstractBaseDto, ET extends AbstractBaseEntity>
 {
     @Autowired
     protected ST service;

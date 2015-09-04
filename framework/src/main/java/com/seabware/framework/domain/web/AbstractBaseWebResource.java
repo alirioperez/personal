@@ -25,9 +25,9 @@ import java.util.List;
  * Base Spring REST Controller. Provides exception handling
  */
 @Controller
-public abstract class AbstractWebResource
+public abstract class AbstractBaseWebResource
 {
-    private static Logger log = LoggerFactory.getLogger(AbstractWebResource.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractBaseWebResource.class);
 
     protected static final String REQUESTBODY_MALFORMED_EXCEPTION = "requestBodyMalFormedException";
 

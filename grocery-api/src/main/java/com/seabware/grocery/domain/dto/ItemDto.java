@@ -1,11 +1,11 @@
 package com.seabware.grocery.domain.dto;
 
-import com.seabware.framework.domain.dto.AbstractDto;
+import com.seabware.framework.domain.dto.AbstractBaseDto;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ItemDto extends AbstractDto
+public class ItemDto extends AbstractBaseDto
 {
 	private static final long serialVersionUID = 1L;
 

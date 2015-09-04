@@ -1,7 +1,7 @@
 package com.seabware.framework.domain.services;
 
 
-import com.seabware.framework.domain.model.AbstractEntity;
+import com.seabware.framework.domain.model.AbstractBaseEntity;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -10,11 +10,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  * @param <RT> the underlying repository type
  * @param <ET> the underlying Entity type
  */
-public abstract class AbstractService<RT extends PagingAndSortingRepository<ET, Long>, ET extends AbstractEntity>
+public abstract class AbstractBaseService<RT extends PagingAndSortingRepository<ET, Long>, ET extends AbstractBaseEntity>
 {
     private RT repository;
 
-    public AbstractService(RT repository)
+    public AbstractBaseService(RT repository)
     {
         this.repository = repository;
     }

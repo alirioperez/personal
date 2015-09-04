@@ -7,7 +7,7 @@ import javax.persistence.*;
  * Base class for all entities
  */
 @MappedSuperclass
-public abstract class AbstractEntity
+public abstract class AbstractBaseEntity
 {
     private Long id;
     protected Long version;

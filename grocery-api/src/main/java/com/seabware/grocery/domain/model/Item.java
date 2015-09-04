@@ -1,23 +1,19 @@
 package com.seabware.grocery.domain.model;
 
-import com.seabware.framework.domain.model.AbstractEntity;
+import com.seabware.framework.domain.model.AbstractBaseEntity;
 import com.seabware.grocery.domain.model.enums.UnitOfMeasureEnum;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Item extends AbstractEntity
+public class Item extends AbstractBaseEntity
 {
 	private String name;
     private UnitOfMeasureEnum unitOfMeasure;
 
-//	@OneToMany
-//	private List<Address> addresses;
-//	@OneToMany
-//	private Map<String, Profile> profiles;
-
 	@NotNull
+    @Column(length = -1)
     public String getName()
 	{
 		return name;

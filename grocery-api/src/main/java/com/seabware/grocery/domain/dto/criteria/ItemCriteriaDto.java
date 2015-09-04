@@ -1,11 +1,11 @@
 package com.seabware.grocery.domain.dto.criteria;
 
-import com.seabware.framework.domain.dto.AbstractCriteriaDto;
+import com.seabware.framework.domain.dto.AbstractBaseCriteriaDto;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class ItemCriteriaDto extends AbstractCriteriaDto
+public class ItemCriteriaDto extends AbstractBaseCriteriaDto
 {
 	private static final long serialVersionUID = 1809408999902445342L;
 

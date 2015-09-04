@@ -1,6 +1,6 @@
 package com.seabware.grocery.web.resources;
 
-import com.seabware.framework.domain.web.AbstractWebResource;
+import com.seabware.framework.domain.web.AbstractBaseWebResource;
 import com.seabware.grocery.domain.dto.ItemDto;
 import com.seabware.grocery.domain.facades.ItemFacade;
 import com.seabware.grocery.domain.facades.impl.ItemFacadeImpl;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/items")
-public class ItemResource extends AbstractWebResource
+public class ItemResource extends AbstractBaseWebResource
 {
     @Autowired
     private ItemFacadeImpl itemFacade;
